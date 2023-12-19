@@ -14,8 +14,8 @@ import 'input_state.dart';
 class InputBloc extends Bloc<InputEvent, InputState> {
   final List<StreamSubscription> _streamSubscription = [];
 
-  late MeasurementRepository _measurementRepository;
-  late MetadataRepository _metadataRepository;
+  MeasurementRepository _measurementRepository;
+  MetadataRepository _metadataRepository;
 
   bool _measure = false;
   bool _delete = false;

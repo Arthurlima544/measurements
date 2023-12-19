@@ -26,10 +26,10 @@ class MeasurementRepository {
   final _points = BehaviorSubject<List<Offset>>.seeded([]);
   final _distances = BehaviorSubject<List<LengthUnit>>.seeded([]);
   final _drawingHolder = BehaviorSubject<DrawingHolder>();
-  late final MetadataRepository _metadataRepository;
+  final MetadataRepository _metadataRepository;
 
-  late MeasurementController _controller;
-  late LengthUnit _transformationFactor;
+  MeasurementController _controller;
+  LengthUnit _transformationFactor;
   double _imageToDocumentScaleFactor = 1.0;
 
   int _currentIndex = -1;
@@ -100,9 +100,8 @@ class MeasurementRepository {
   }
 
   void registerMoveEvent(Offset position) {
-    if (_currentState != TouchState.DOWN && _currentState != TouchState.MOVE) {
+    if (_currentState != TouchState.DOWN && _currentState != TouchState.MOVE)
       return;
-    }
     _currentState = TouchState.MOVE;
 
     _updatePoint(_convertIntoDocumentLocalCenteredPosition(
@@ -110,9 +109,8 @@ class MeasurementRepository {
   }
 
   void registerUpEvent(Offset position) {
-    if (_currentState != TouchState.DOWN && _currentState != TouchState.MOVE) {
+    if (_currentState != TouchState.DOWN && _currentState != TouchState.MOVE)
       return;
-    }
     _currentState = TouchState.UP;
 
     _updatePoint(_convertIntoDocumentLocalCenteredPosition(
@@ -219,8 +217,8 @@ class MeasurementRepository {
   void _movementStarted(int index) {
     var distances = [..._distances.value];
 
-    distances.setRange(max(0, index - 1), min(distances.length, index + 1),
-        [Millimeter(-1), Millimeter(-1)]);
+    distances.setRange(
+        max(0, index - 1), min(distances.length, index + 1), [null, null]);
     _publishDistances(distances);
 
     _logger.log('started moving point with index: $index');
@@ -233,16 +231,16 @@ class MeasurementRepository {
   }
 
   void _synchronizeDistances() {
-    if (_absolutePoints.length >= 2) {
+    if (_transformationFactor != null && _absolutePoints.length >= 2) {
       var distances = <LengthUnit>[];
       _absolutePoints.doInBetween((start, end) =>
-          distances.add(_transformationFactor * (start! - end!).distance));
+          distances.add(_transformationFactor * (start - end).distance));
       _publishDistances(distances);
 
-      _controller.distances = distances.map((unit) => unit.value).toList();
+      _controller?.distances = distances.map((unit) => unit.value).toList();
     } else if (_absolutePoints.length == 1) {
       _publishDistances([]);
-      _controller.distances = [];
+      _controller?.distances = [];
     }
   }
 }

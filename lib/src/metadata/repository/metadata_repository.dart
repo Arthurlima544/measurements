@@ -32,7 +32,7 @@ class MetadataRepository {
   final _zoomLevel = BehaviorSubject<double>.seeded(1.0);
   final _contentPosition = BehaviorSubject<Offset>();
 
-  late Rect _deleteRegion;
+  Rect _deleteRegion;
 
   MetadataRepository();
 
@@ -98,11 +98,11 @@ class MetadataRepository {
   }
 
   void registerStartupValuesChange({
-    required MeasurementInformation measurementInformation,
-    required bool measure,
-    required bool showDistance,
-    required MagnificationStyle magnificationStyle,
-    required MeasurementController controller,
+    @widget.required MeasurementInformation measurementInformation,
+    @widget.required bool measure,
+    @widget.required bool showDistance,
+    @widget.required MagnificationStyle magnificationStyle,
+    @widget.required MeasurementController controller,
   }) {
     _measurementInformation.value = measurementInformation;
     _unitOfMeasurement.value = measurementInformation.targetLengthUnit;
@@ -144,7 +144,7 @@ class MetadataRepository {
   }
 
   void registerMeasurementFunction(MeasurementFunction function) {
-    _controller.value.measurementFunction = function;
+    _controller.value?.measurementFunction = function;
   }
 
   bool isInDeleteRegion(Offset position) => _deleteRegion.contains(position);
@@ -210,7 +210,7 @@ class MetadataRepository {
               (measurementInfo.scale * viewWidth) /
               zoomLevel;
 
-      _controller.value.tolerance = _tolerance.value;
+      _controller.value?.tolerance = _tolerance.value;
 
       _logger.log('tolerance is: ${_transformationFactor.value}');
       _logger.log('updated transformationFactor');

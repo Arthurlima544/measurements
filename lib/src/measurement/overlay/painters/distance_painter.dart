@@ -14,13 +14,13 @@ class DistancePainter extends material.CustomPainter {
   final LengthUnit distance;
   final Offset viewCenter;
 
-  late Offset _zeroPoint;
+  Offset _zeroPoint;
   final Offset _zeroPointWithoutTolerance = Offset(-29, 0);
   final Offset _zeroPointWithTolerance = Offset(-47, 0);
 
-  late Paragraph _paragraph;
-  late double _radians;
-  late Offset _position;
+  Paragraph _paragraph;
+  double _radians;
+  Offset _position;
 
   ParagraphBuilder paragraphBuilder = ParagraphBuilder(
     ParagraphStyle(
@@ -33,12 +33,12 @@ class DistancePainter extends material.CustomPainter {
   );
 
   DistancePainter(
-      {required Offset start,
-      required Offset end,
-      required this.distance,
-      required this.viewCenter,
-      required double tolerance,
-      required DistanceStyle style}) {
+      {@material.required Offset start,
+      @material.required Offset end,
+      @material.required this.distance,
+      @material.required this.viewCenter,
+      @material.required double tolerance,
+      @material.required DistanceStyle style}) {
     if (style.showTolerance) {
       _zeroPoint = _zeroPointWithTolerance;
     } else {
@@ -68,10 +68,10 @@ class DistancePainter extends material.CustomPainter {
     paragraphBuilder.pushStyle(TextStyle(color: style.textColor));
     if (style.showTolerance) {
       paragraphBuilder.addText(
-          '${distanceValue.toStringAsFixed(style.numDecimalPlaces)}±${tolerance.toStringAsFixed(style.numDecimalPlaces)}${distance.getAbbreviation()}');
+          '${distanceValue?.toStringAsFixed(style.numDecimalPlaces)}±${tolerance.toStringAsFixed(style.numDecimalPlaces)}${distance.getAbbreviation()}');
     } else {
       paragraphBuilder.addText(
-          '${distanceValue.toStringAsFixed(style.numDecimalPlaces)}${distance.getAbbreviation()}');
+          '${distanceValue?.toStringAsFixed(style.numDecimalPlaces)}${distance.getAbbreviation()}');
     }
 
     _paragraph = paragraphBuilder.build();

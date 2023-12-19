@@ -14,7 +14,7 @@ import 'metadata_state.dart';
 class MetadataBloc extends Bloc<MetadataEvent, MetadataState> {
   final _logger = Logger(LogDistricts.METADATA_BLOC);
 
-  late MetadataRepository _repository;
+  MetadataRepository _repository;
 
   MetadataBloc() : super(MetadataState()) {
     _repository = GetIt.I<MetadataRepository>();

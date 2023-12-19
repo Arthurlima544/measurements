@@ -23,22 +23,22 @@ class ScaleBloc extends Bloc<ScaleEvent, ScaleState>
   final double _minScale = 1.0;
   final double _maxScale = 10.0;
 
-  late MetadataRepository _metadataRepository;
+  MetadataRepository _metadataRepository;
 
-  late Offset _translateStart;
+  Offset _translateStart;
   Offset _workingTranslate = Offset(0, 0);
   Offset _currentTranslate = Offset(0, 0);
 
-  late Size _screenSize;
-  late Size _viewSize;
+  Size _screenSize;
+  Size _viewSize;
   Offset _defaultOffset = Offset(0, 0);
 
   double _currentScale = 1.0;
   double _accumulatedScale = 1.0;
   double _doubleTapScale = 1.0;
-  late double _originalScale;
+  double _originalScale;
 
-  late bool _measure;
+  bool _measure;
 
   ScaleBloc() : super(ScaleState(Offset(0, 0), 1.0, Matrix4.identity())) {
     _metadataRepository = GetIt.I<MetadataRepository>();
@@ -62,7 +62,7 @@ class ScaleBloc extends Bloc<ScaleEvent, ScaleState>
 
   @override
   void onEvent(ScaleEvent event) {
-    if (event is ScaleOriginalEvent) {
+    if (event is ScaleOriginalEvent && _originalScale != null) {
       _currentScale = _originalScale;
       _accumulatedScale = _currentScale;
       _registerResizing();
@@ -91,7 +91,7 @@ class ScaleBloc extends Bloc<ScaleEvent, ScaleState>
             _defaultOffset;
       } else {
         _accumulatedScale =
-            (_currentScale * event.scale).fit(_minScale, _maxScale).toDouble();
+            (_currentScale * event.scale).fit(_minScale, _maxScale);
       }
     } else if (event is ScaleDoubleTapEvent) {
       if (_currentScale == 1.0) {
@@ -156,9 +156,8 @@ class ScaleBloc extends Bloc<ScaleEvent, ScaleState>
 
   @override
   bool zoomToLifeSize() {
-    if (!(_originalScale.isInBounds(_minScale, _maxScale) ?? false)) {
+    if (!(_originalScale?.isInBounds(_minScale, _maxScale) ?? false))
       return false;
-    }
 
     add(ScaleOriginalEvent());
     return true;
@@ -170,7 +169,7 @@ class ScaleBloc extends Bloc<ScaleEvent, ScaleState>
   Offset _getTranslate() => _defaultOffset + _workingTranslate;
 
   void _updateDefaultOffset() {
-    if (_viewSize == null) return;
+    if (_screenSize == null || _viewSize == null) return;
 
     _defaultOffset = Offset((_screenSize.width - _viewSize.width) / 2.0,
         (_screenSize.height - _viewSize.height) / 2.0);

@@ -12,14 +12,14 @@ class MeasurePainter extends material.CustomPainter {
   final Paint dotPaint, pathPaint;
 
   final Path _drawPath = Path();
-  late double _dotRadius;
+  double _dotRadius;
 
   MeasurePainter(
-      {required this.start,
-      required this.end,
-      required this.style,
-      required this.dotPaint,
-      required this.pathPaint}) {
+      {@material.required this.start,
+      @material.required this.end,
+      @material.required this.style,
+      @material.required this.dotPaint,
+      @material.required this.pathPaint}) {
     _dotRadius = style.dotRadius;
 
     var lineType = style.lineType;

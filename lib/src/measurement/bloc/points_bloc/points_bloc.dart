@@ -8,7 +8,6 @@ import 'package:document_measure/src/measurement/bloc/points_bloc/points_event.d
 import 'package:document_measure/src/measurement/bloc/points_bloc/points_state.dart';
 import 'package:document_measure/src/measurement/overlay/holder.dart';
 import 'package:document_measure/src/measurement/repository/measurement_repository.dart';
-import 'package:document_measure/src/measurement_information.dart';
 import 'package:document_measure/src/metadata/repository/metadata_repository.dart';
 import 'package:document_measure/src/util/logger.dart';
 import 'package:document_measure/src/util/utils.dart';
@@ -21,17 +20,17 @@ class PointsBloc extends Bloc<PointsEvent, PointsState> {
   final _logger = Logger(LogDistricts.POINTS_BLOC);
   final List<StreamSubscription> _streamSubscriptions = [];
 
-  late MeasurementRepository _measureRepository;
-  late MetadataRepository _metadataRepository;
+  MeasurementRepository _measureRepository;
+  MetadataRepository _metadataRepository;
 
-  StreamSubscription? _onlyPointsSubscription;
-  StreamSubscription? _pointsAndDistancesSubscription;
+  StreamSubscription _onlyPointsSubscription;
+  StreamSubscription _pointsAndDistancesSubscription;
 
-  late Function(List<Offset>) _pointsListener;
-  late Function(DrawingHolder) _pointsAndDistanceListener;
+  Function(List<Offset>) _pointsListener;
+  Function(DrawingHolder) _pointsAndDistanceListener;
 
-  late Offset _viewCenter;
-  late double _tolerance;
+  Offset _viewCenter;
+  double _tolerance;
 
   PointsBloc() : super(PointsEmptyState()) {
     _pointsListener = (points) => add(PointsOnlyEvent(points));
@@ -45,7 +44,7 @@ class PointsBloc extends Bloc<PointsEvent, PointsState> {
         .add(_metadataRepository.showDistances.listen((showDistances) {
       if (showDistances) {
         if (_pointsAndDistancesSubscription == null) {
-          _onlyPointsSubscription!.cancel();
+          _onlyPointsSubscription?.cancel();
           _onlyPointsSubscription = null;
 
           _pointsAndDistancesSubscription = _measureRepository.drawingHolder
@@ -53,7 +52,7 @@ class PointsBloc extends Bloc<PointsEvent, PointsState> {
         }
       } else {
         if (_onlyPointsSubscription == null) {
-          _pointsAndDistancesSubscription!.cancel();
+          _pointsAndDistancesSubscription?.cancel();
           _pointsAndDistancesSubscription = null;
 
           _onlyPointsSubscription =
@@ -77,15 +76,12 @@ class PointsBloc extends Bloc<PointsEvent, PointsState> {
   @override
   Future<void> close() {
     _streamSubscriptions.forEach((subscription) => subscription.cancel());
-    if (_onlyPointsSubscription != null) {
-      _onlyPointsSubscription!.cancel();
-    }
-    if (_pointsAndDistancesSubscription != null) {
-      _pointsAndDistancesSubscription!.cancel();
-    }
+    _onlyPointsSubscription?.cancel();
+    _pointsAndDistancesSubscription?.cancel();
     return super.close();
   }
 
+  @override
   Stream<PointsState> mapEventToState(PointsEvent event) async* {
     if (event.points.isEmpty) {
       yield PointsEmptyState();
@@ -109,8 +105,8 @@ class PointsBloc extends Bloc<PointsEvent, PointsState> {
 
     if (event.distances.contains(null)) {
       var nullIndices = <int>[];
-      nullIndices.add(event.distances.indexOf(Millimeter(-1)));
-      nullIndices.add(event.distances.lastIndexOf(Millimeter(-1)));
+      nullIndices.add(event.distances.indexOf(null));
+      nullIndices.add(event.distances.lastIndexOf(null));
 
       return PointsAndDistanceActiveState(
           holders, _viewCenter, _tolerance, nullIndices);

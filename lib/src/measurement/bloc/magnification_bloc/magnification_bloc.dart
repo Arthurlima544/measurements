@@ -19,14 +19,14 @@ class MagnificationBloc extends Bloc<MagnificationEvent, MagnificationState> {
   final InputBloc inputBloc;
   final List<StreamSubscription> _streamSubscriptions = [];
 
-  late MeasurementRepository _measureRepository;
-  late MetadataRepository _metadataRepository;
+  MeasurementRepository _measureRepository;
+  MetadataRepository _metadataRepository;
 
-  late Image _backgroundImage;
-  late double _imageScaleFactor;
-  late Size _viewSize;
-  late double _magnificationRadius;
-  late Offset _magnificationOffset;
+  Image _backgroundImage;
+  double _imageScaleFactor;
+  Size _viewSize;
+  double _magnificationRadius;
+  Offset _magnificationOffset;
 
   MagnificationBloc(this.inputBloc) : super(MagnificationInactiveState()) {
     _measureRepository = GetIt.I<MeasurementRepository>();
@@ -45,7 +45,7 @@ class MagnificationBloc extends Bloc<MagnificationEvent, MagnificationState> {
           _defaultMagnificationOffset.dy + radius);
     }));
 
-    _streamSubscriptions.add(inputBloc.stream.listen((state) {
+    _streamSubscriptions.add(inputBloc.listen((state) {
       if (state is InputStandardState) {
         add(MagnificationShowEvent(state.position));
       } else if (state is InputEmptyState) {
@@ -86,6 +86,7 @@ class MagnificationBloc extends Bloc<MagnificationEvent, MagnificationState> {
     });
   }
 
+  @override
   Stream<MagnificationState> mapEventToState(MagnificationEvent event) async* {
     if (event is MagnificationShowEvent) {
       yield _mapMagnificationShowToState(event);

@@ -21,9 +21,9 @@ class MeasureArea extends StatelessWidget {
   final Paint dotPaint = Paint(), pathPaint = Paint();
 
   MeasureArea(
-      {required this.pointStyle,
-      required this.magnificationStyle,
-      required this.distanceStyle}) {
+      {@required this.pointStyle,
+      @required this.magnificationStyle,
+      @required this.distanceStyle}) {
     var lineType = pointStyle.lineType;
     double strokeWidth;
     if (lineType is SolidLine) {
@@ -143,9 +143,9 @@ class MeasureArea extends StatelessWidget {
       return CustomPaint(
         foregroundPainter: MagnifyingPainter(
           fingerPosition: state.position,
-          absolutePosition: state.absolutePosition!,
-          image: state.backgroundImage!,
-          imageScaleFactor: state.imageScaleFactor!,
+          absolutePosition: state.absolutePosition,
+          image: state.backgroundImage,
+          imageScaleFactor: state.imageScaleFactor,
           style: magnificationStyle,
           magnificationOffset: state.magnificationOffset,
         ),
