@@ -74,15 +74,14 @@ class Measurements extends StatelessWidget {
   final DistanceStyle distanceStyle;
 
   Measurements({
-    Key key,
-    @required this.child,
+    required this.child,
     this.deleteChild = const _DeleteChild(),
     this.deleteChildAlignment = Alignment.bottomCenter,
     this.measure = true,
     this.showDistanceOnLine = true,
     this.measurementInformation = const MeasurementInformation.dinA4(),
     this.magnificationZoomFactor = 2.0,
-    this.controller,
+    required this.controller,
     this.pointStyle = const PointStyle(),
     this.magnificationStyle = const MagnificationStyle(),
     this.distanceStyle = const DistanceStyle(),
@@ -156,8 +155,8 @@ class _Measurements extends StatelessWidget {
   void _setBackgroundImageToBloc(BuildContext context, double zoom) {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (_childKey.currentContext != null) {
-        RenderRepaintBoundary boundary =
-            _childKey.currentContext.findRenderObject();
+        var boundary = _childKey.currentContext!.findRenderObject()
+            as RenderRepaintBoundary;
 
         if (boundary.size.width > 0.0 && boundary.size.height > 0.0) {
           final pixelRatio =
@@ -179,25 +178,25 @@ class _Measurements extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (_deleteKey.currentContext != null &&
           _parentKey.currentContext != null) {
-        var parentObject = _parentKey.currentContext.findRenderObject();
-        var deleteObject = _deleteKey.currentContext.findRenderObject();
+        var parentObject = _parentKey.currentContext?.findRenderObject();
+        var deleteObject = _deleteKey.currentContext?.findRenderObject();
 
         final translation =
-            deleteObject.getTransformTo(parentObject).getTranslation();
-        var deleteSize = _deleteKey.currentContext.size;
+            deleteObject?.getTransformTo(parentObject).getTranslation();
+        var deleteSize = _deleteKey.currentContext?.size;
 
         _logger.log('Translation is: $translation size is $deleteSize');
 
-        BlocProvider.of<MetadataBloc>(context)
-            ?.add(MetadataScreenSizeEvent(_parentKey.currentContext.size));
-        BlocProvider.of<MetadataBloc>(context)?.add(MetadataDeleteRegionEvent(
-            Offset(translation.x, translation.y), deleteSize));
+        BlocProvider.of<MetadataBloc>(context).add(MetadataScreenSizeEvent(
+            _parentKey.currentContext!.size ?? Size.zero));
+        BlocProvider.of<MetadataBloc>(context).add(MetadataDeleteRegionEvent(
+            Offset(translation!.x, translation.y), deleteSize!));
       }
     });
   }
 
   void _setStartupArgumentsToBloc(BuildContext context) {
-    BlocProvider.of<MetadataBloc>(context)?.add(MetadataStartedEvent(
+    BlocProvider.of<MetadataBloc>(context).add(MetadataStartedEvent(
       measurementInformation: measurementInformation,
       measure: measure,
       showDistances: showDistanceOnLine,

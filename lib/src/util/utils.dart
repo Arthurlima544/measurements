@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'logger.dart';
 
 extension IterableExtension on Iterable {
-  void doInBetween<T>(Function(T, T) function) {
+  void doInBetween<T>(Function(dynamic, dynamic) function) {
     var iterator = this.iterator;
     iterator.moveNext();
 
@@ -49,10 +49,14 @@ extension OffsetExtension on Offset {
     var thresholdOffset = min(mySize.width, mySize.height) * threshold;
 
     return Offset(
-        (currentOffset.dx + target.dx).fit(
-            -mySize.width + thresholdOffset, bounds.width - thresholdOffset),
-        (currentOffset.dy + target.dy).fit(
-            -mySize.height + thresholdOffset, bounds.height - thresholdOffset));
+      (currentOffset.dx + target.dx)
+          .fit(-mySize.width + thresholdOffset, bounds.width - thresholdOffset)
+          .toDouble(),
+      (currentOffset.dy + target.dy)
+          .fit(
+              -mySize.height + thresholdOffset, bounds.height - thresholdOffset)
+          .toDouble(),
+    );
   }
 }
 

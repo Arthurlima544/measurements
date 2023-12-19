@@ -14,16 +14,21 @@ class MagnificationInactiveState extends MagnificationState {
 
 class MagnificationActiveState extends MagnificationState {
   final Offset position;
-  final Offset absolutePosition;
   final Offset magnificationOffset;
-  final Image backgroundImage;
-  final double imageScaleFactor;
+  final Offset? absolutePosition;
+  final Image? backgroundImage;
+  final double? imageScaleFactor;
 
-  MagnificationActiveState(this.position, this.magnificationOffset,
-      {this.absolutePosition, this.backgroundImage, this.imageScaleFactor});
+  MagnificationActiveState(
+    this.position,
+    this.magnificationOffset, {
+    this.absolutePosition,
+    this.backgroundImage,
+    this.imageScaleFactor,
+  });
 
   @override
-  List<Object> get props => [
+  List<dynamic> get props => [
         position,
         absolutePosition,
         magnificationOffset,

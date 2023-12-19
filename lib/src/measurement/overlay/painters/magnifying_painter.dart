@@ -13,17 +13,17 @@ class MagnifyingPainter extends CustomPainter {
 
   final _drawPaint = Paint();
 
-  Offset _drawPosition;
-  RRect _outerCircle, _innerCircle;
-  Rect _imageTargetRect, _imageSourceRect;
+  late Offset _drawPosition;
+  late RRect _outerCircle, _innerCircle;
+  late Rect _imageTargetRect, _imageSourceRect;
 
   MagnifyingPainter(
-      {@required this.fingerPosition,
-      @required Offset absolutePosition,
-      @required this.image,
-      @required this.style,
-      double imageScaleFactor,
-      @required Offset magnificationOffset}) {
+      {required this.fingerPosition,
+      required Offset absolutePosition,
+      required this.image,
+      required this.style,
+      required double imageScaleFactor,
+      required Offset magnificationOffset}) {
     _drawPosition = fingerPosition - magnificationOffset;
 
     var diameter = 2 * style.magnificationRadius;
